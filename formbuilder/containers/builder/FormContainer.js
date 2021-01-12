@@ -1,6 +1,5 @@
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-
 import * as FieldListActions from "../../actions/fieldlist";
 import * as ServerActions from "../../actions/server";
 
@@ -19,6 +18,7 @@ function mapStateToProps(state) {
     dragndropStatus: state.dragndrop.dragndropStatus
   };
 }
+
 
 function mapDispatchToProps(dispatch) {
   const actionCreators = {...FieldListActions, ...ServerActions};

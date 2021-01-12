@@ -11,20 +11,25 @@ export default class UserForm extends Component {
       });
     }
   }
-
   render() {
-    const origin = window.location.origin + window.location.pathname;
-    const onSubmit = ({formData}) => {
-      this.props.submitRecord(formData, this.props.params.id, () => {
-        this.props.history.pushState(null, "/form/data-sent");
+      const title = this.props.schema.title;
+      console
+      const onSubmit = ({formData}) => {
+      this.props.history.push("form/data-sent");
+      console.log(formData);
+      console.log(this.props);
+      this.props.submitRecord(title,formData, () => {
+        console.log("success");
+        //console.log(formData);
+       // console.log(this.props.params.id);
       });
     };
     return (<div className="narrow">
       <Form schema={this.props.schema} uiSchema={this.props.uiSchema}
         onSubmit={onSubmit}/>
-      <p className="small">This form was created with the <a href={origin}>{config.projectName}</a>.</p>
+      <p className="small">This form was created with the Arsela test</p>
     </div>
-
   );
   }
 }
+

@@ -43,10 +43,9 @@ class FieldPropertiesEditor extends Component {
   }
 
   render() {
-    const {schema, name, required, uiSchema, onCancel, onUpdate, onDelete} = this.props;
+    const {schema, name, uiSchema, onCancel, onUpdate, onDelete} = this.props;
     const formData = {
       ...schema,
-      required,
       ...this.state.editedSchema,
       name: this.state.name
     };
@@ -55,11 +54,7 @@ class FieldPropertiesEditor extends Component {
       <div className="panel panel-default field-editor">
         <div className="panel-heading clearfix">
             <strong className="panel-title">Edit {name}</strong>
-
             <ButtonToolbar className="pull-right">
-              <FieldListDropdown bsStyle="link" {...this.props}>
-                change field <i className="glyphicon glyphicon-cog"/>
-              </FieldListDropdown>
               <Button bsStyle="link" onClick={onDelete}>
                 delete <i className="glyphicon glyphicon-trash"/>
               </Button>

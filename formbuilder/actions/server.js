@@ -1,14 +1,14 @@
 import KintoClient from "kinto-http";
 import btoa from "btoa";
 import uuid from "uuid";
-
 import {addNotification} from "./notifications";
 import {getFormID} from "../utils";
 import config from "../config";
+import axios from 'axios';
+
 
 
 export const FORM_PUBLISH = "FORM_PUBLISH";
-
 export const FORM_PUBLICATION_PENDING = "FORM_PUBLICATION_PENDING";
 export const FORM_PUBLICATION_DONE = "FORM_PUBLICATION_DONE";
 export const FORM_PUBLICATION_FAILED = "FORM_PUBLICATION_FAILED";
@@ -22,12 +22,14 @@ export const SCHEMA_RETRIEVAL_DONE = "SCHEMA_RETRIEVAL_DONE";
 export const RECORDS_RETRIEVAL_PENDING = "RECORDS_RETRIEVAL_PENDING";
 export const RECORDS_RETRIEVAL_DONE = "RECORDS_RETRIEVAL_DONE";
 
-const CONNECTIVITY_ISSUES = "This is usually due to an unresponsive server or some connectivity issues.";
 
+
+//const CONNECTIVITY_ISSUES = "This is usually due to an unresponsive server or some connectivity issues.";
+/*
 function connectivityIssues(dispatch, message) {
   const msg = message +  " " + CONNECTIVITY_ISSUES;
   dispatch(addNotification(msg, {type: "error"}));
-}
+}*/
 
 /**
  * Return HTTP authentication headers from a given token.
@@ -128,19 +130,28 @@ export function publishForm(callback) {
   };
   return thunk;
 }
-
 /**
  * Submit a new form answer.
  * New credentials are created for each answer.
  **/
-export function submitRecord(record, collection, callback) {
+export function submitRecord(title,record, callback) { //collection
+  var result = Object.keys(record).map(key => ({ [key]: record[key] }));
+  console.log(result);//array of objects
+  console.log(result,"   gfg");
+  console.log(title) ;
+  axios.post("http://localhost:3030/addFields", {title:title,record:result}) 
+     .then(( response ) => {
+      console.log("success",response);
+      //setResults(response.data.fields);
+});
+  //console.log("collection",collection);
   return (dispatch, getState) => {
     dispatch({type: FORM_RECORD_CREATION_PENDING});
 
     // Submit all form answers under a different users.
     // Later-on, we could persist these userid to let users change their
     // answers (but we're not quite there yet).
-    new KintoClient(config.server.remote, {
+   /* new KintoClient(config.server.remote, {
       headers: getAuthenticationHeaders(uuid.v4())
     })
     .bucket(config.server.bucket)
@@ -153,7 +164,7 @@ export function submitRecord(record, collection, callback) {
     })
     .catch((error) => {
       connectivityIssues(dispatch, "We were unable to publish your answers");
-    });
+    });*/
   };
 }
 
@@ -185,11 +196,22 @@ export function loadSchema(formID, callback, adminId) {
  *
  * The formID is derived from the the adminToken.
  **/
-export function getRecords(adminToken, callback) {
+export function getRecords( callback) {
   return (dispatch, getState) => {
-    const formID = getFormID(adminToken);
     dispatch({type: RECORDS_RETRIEVAL_PENDING});
-    new KintoClient(config.server.remote, {
+     axios.get("http://localhost:3030/getFields")
+        .then(( response ) => {
+            console.log("this is response",response.data.fields);
+        dispatch({
+            type:RECORDS_RETRIEVAL_DONE,
+            records: response.data.fields
+            });
+            if (callback) {
+              callback(data);
+            }
+      });
+    
+  /*  new KintoClient(config.server.remote, {
       headers: getAuthenticationHeaders(adminToken)
     })
     .bucket(config.server.bucket)
@@ -208,6 +230,6 @@ export function getRecords(adminToken, callback) {
         dispatch,
         "We were unable to retrieve the list of records for your form."
       );
-    });
+    });*/
   };
 }

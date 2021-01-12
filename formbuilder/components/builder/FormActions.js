@@ -4,18 +4,18 @@ import {Button, ButtonToolbar, ButtonGroup}  from "react-bootstrap";
 
 export default function FormActions(props) {
   const onClick = (event) => {
+    alert("your form is now available");
+   /* props.history.push(`/form/data-sent`);
     props.publishForm(({collection, adminToken}) => {
       props.history.pushState(null, `/builder/published/${adminToken}`);
-    });
+    });*/
   };
-
   let saveIconName;
   if (props.status == "pending") {
     saveIconName = "refresh spin";
   } else {
     saveIconName = "save";
   }
-
   return (
     <div>
       <ButtonToolbar className="builder-inner-actions">

@@ -23,7 +23,6 @@ export default function Form(props) {
       <div className="rjsf builder-form">
         <SchemaField {...props} registry={registry} />
       </div>
-
       <FormActionsContainer {...props}/>
     </div>
   );

@@ -11,7 +11,6 @@ import FormEditContainer from "./containers/builder/FormEditContainer";
 import UserFormContainer from "./containers/UserFormContainer";
 import RecordCreatedContainer from "./containers/RecordCreatedContainer";
 import AdminViewContainer from "./containers/AdminViewContainer";
-import WelcomeContainer from "./containers/WelcomeContainer";
 import JsonSchemaDownloaderContainer from "./containers/builder/JsonSchemaDownloaderContainer";
 import Header from "./components/Header";
 import Check from "./components/Check";
@@ -75,11 +74,9 @@ const LinkToHome = () => {
 
 export default (
     <Route path="/" component={App}>
-      <IndexRoute components={{...common, mainComponent: WelcomeContainer}} />
+      <IndexRoute components={{...common, content: FormContainer}} />
       <Route path="faq"
         components={{...common, sidebarComponent: LinkToBuilder, content: FAQ}} />
-      <Route path="builder"
-        components={{...common, content: FormContainer}} />
       <Route path="builder/edit/:adminId"
         components={{...common, content: FormEditContainer}} />
       <Route path="builder/json"
@@ -88,10 +85,10 @@ export default (
         components={{...common, sidebarComponent: BackAndCheck, content: FormCreatedContainer}} />
       <Route path="form/data-sent"
         components={{...common, sidebarComponent: Check, content: RecordCreatedContainer}} />
-      <Route path="form/:id"
+      <Route path="form/useform"
         components={{...common, mainComponent: UserFormContainer}} />
-      <Route path="admin/:adminToken"
-        components={{...common, sidebarComponent: null, header: null, content: AdminViewContainer}} />
+      <Route path="form/submitted"
+        components={{...common, mainComponent: AdminViewContainer}} />
       <Route path="*" components={{
         sidebarComponent: LinkToHome,
         content: _ => <h1>Page not found.</h1>

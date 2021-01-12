@@ -1,6 +1,7 @@
 import React, {PropTypes} from "react";
 import {RIEInput} from "riek";
 
+
 function TitleField(props) {
   const onUpdate = function(formData) {
     props.updateFormTitle(formData);
@@ -22,7 +23,6 @@ if (process.env.NODE_ENV !== "production") {
   TitleField.propTypes = {
     id: PropTypes.string,
     title: PropTypes.string,
-    required: PropTypes.bool,
   };
 }
 

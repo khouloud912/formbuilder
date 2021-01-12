@@ -1,66 +1,142 @@
 import React, { Component } from "react";
-import CSVDownloader from "./CSVDownloader";
-import XLSDownloader from "./XLSDownloader";
-import URLDisplay from "./URLDisplay";
 import {getFormID, getFormURL} from "../utils";
+import axios from 'axios';
+import { Table , InputGroup , FormControl } from 'react-bootstrap';
+import ReactPaginate from 'react-paginate';
+//import FilterResults from 'react-filter-search';
+
 
 import {DropdownButton, MenuItem}  from "react-bootstrap";
-
+/* win bech nchouf el hajet el submitted */
 export default class AdminView extends Component {
-  componentDidMount() {
-    const adminToken = this.props.params.adminToken;
-    this.formID = getFormID(adminToken);
-    this.props.getRecords(adminToken);
-    this.props.loadSchema(this.formID);
+  constructor(props) {
+    super(props);
+    this.state = {
+        records:[{}],
+        filtereddata:[{}],
+        filtredValue: '',
+        offset: 0,
+        perPage: 5,
+        currentPage: 0
+    };
+    this.handlePageClick = this.handlePageClick.bind(this);
   }
+
+
+ 
+  componentDidMount() {
+  //  this.formID = getFormID(adminToken);
+   // this.props.getRecords();
+   this.fetchdata();
+  }
+
+
+  fetchdata=()=>{
+    console.log(this.props.records);
+    //this.props.loadSchema(this.formID);
+   return axios.get("http://localhost:3030/getFields")
+    .then(( response ) => {
+        console.log("records",response.data.fields);
+        this.setState({ records: response.data.fields});
+        this.setState({ filtereddata: response.data.fields});
+        const data = response.data.fields;
+        const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
+
+        const postData = slice.map(({ thumburl }) => <img src={thumburl} />);
+        console.log("filtereddata",postData);
+        this.setState({
+          pageCount: Math.ceil(data.length / this.state.perPage),
+          filtereddata:postData
+      })
+  });
+  }
+
+  handlePageClick = (e) => {
+    const selectedPage = e.selected;
+    const offset = selectedPage * this.state.perPage;
+
+    this.setState({
+        currentPage: selectedPage,
+        offset: offset
+    }, () => {
+        this.fetchdata()
+    });
+};
+
+  handleSearch = (e) => {
+    console.log(e.target.value);
+    // this.setState({
+    // filtredValue: e.target.value
+    // })
+    let filteredrecords = this.state.records.filter(element => element.titleform.toLowerCase().includes(e.target.value));
+    if ( filteredrecords === null ){
+      this.setState({
+        filtereddata:this.state.records
+      })
+      }else{
+        this.setState({
+          filtereddata:filteredrecords
+       })
+      }
+  }
+
+  
   render() {
     const properties = this.props.schema.properties;
     const title = this.props.schema.title;
-    const ready = Object.keys(properties).length !== 0;
-    const schemaFields = this.props.uiSchema["ui:order"];
-    const formUrl = getFormURL(this.formID);
+    console.log("this is title",title);
+  //  const ready = Object.keys(properties).length !== 0;
+    //const schemaFields = this.props.uiSchema["ui:order"];
+    //const formUrl = getFormURL(this.formID);
+    return(
+      <div >
+        <h3>all the responses submitted from user  </h3>
+        <InputGroup className="mb-3" onChange={this.handleSearch}>
+        <FormControl aria-label="Text input with checkbox" />
+        <br/>
+        <ReactPaginate
+                    previousLabel={"prev"}
+                    nextLabel={"next"}
+                    breakLabel={"..."}
+                    breakClassName={"break-me"}
+                    pageCount={this.state.pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={this.handlePageClick}
+                    containerClassName={"pagination"}
+                    subContainerClassName={"pages pagination"}
+                    activeClassName={"active"}/>
+        <br/>
+        <br/>
+        <br/>
 
-    let content = "loading";
-    if (ready) {
-      content = (
-      <div>
-        <h3>Results for {title}</h3>
-        <DropdownButton title="Download results" id="bg-nested-dropdown" className="pull-right">
-          <li>
-            <CSVDownloader
-              schema={this.props.schema}
-              fields={schemaFields}
-              records={this.props.records} />
-          </li>
-          <li>
-            <XLSDownloader
-              schema={this.props.schema}
-              fields={schemaFields}
-              records={this.props.records} />
-          </li>
-        </DropdownButton>
-        <URLDisplay url={formUrl} />
-        <table className="table table-striped">
+      </InputGroup>
+        {this.state.filtereddata.map((itemfiltered)=>(
+
+        <Table striped bordered hover>
         <thead>
-          <tr>{
-            schemaFields.map((key) => {
-              return <th key={key}>{properties[key].title}</th>;
-            })
-          }</tr>
-        </thead>
-        <tbody>
-        {this.props.records.map((record, idx) => {
-          return (<tr key={idx}>{
-            schemaFields.map((key) => {
-              return <td key={key}>{String(record[key])}</td>;
-            }
-          )}
-          </tr>);
-        })}
-        </tbody>
-        </table>
-      </div>);
-    }
-    return <div className="test">{content}</div>;
+      <tr>
+        <th>form title</th>
+        <th>short description</th>
+            { itemfiltered.objects && itemfiltered.objects.map((obj)=>(
+            <th>{obj.nom}</th>
+      ))}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+         <td>{itemfiltered.titleform}</td>
+        <td>{itemfiltered.description}</td>
+           { itemfiltered.objects && itemfiltered.objects.map((obj)=>(
+            <th>{obj.valeur}</th>
+      ))}  
+      </tr>
+    </tbody>
+    </Table>
+        ))
+        }
+          
+      </div>
+      );    
   }
 }

@@ -33,7 +33,6 @@ export default class FieldListDropdown extends Component {
       } else {
         this.props.addField(field);
       }
-
     }
   }
 

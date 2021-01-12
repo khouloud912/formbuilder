@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ClipboardButton from "react-clipboard.js";
 import {getFormID, getFormURL, getFormEditURL, getAdminURL} from "../utils";
-import URLDisplay from "./URLDisplay";
 
 export default class FormCreated extends Component {
   constructor(props) {

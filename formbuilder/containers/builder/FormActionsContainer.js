@@ -4,6 +4,7 @@ import FormActions from "../../components/builder/FormActions";
 import * as FieldListActions from "../../actions/fieldlist";
 import config from "../../config";
 
+
 function mapStateToProps(state) {
   return {
     fieldList: config.fieldList,
@@ -20,3 +21,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(FormActions);
+

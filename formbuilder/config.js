@@ -22,30 +22,6 @@ export default {
           properties: {
             title: {type: "string", title: "Label"},
             description: {type: "string", title: "Example value"},
-            required: {type: "boolean"},
-          }
-        },
-      },
-      formData: {}
-    },
-    {
-      id: "multilinetext",
-      icon: "align-left",
-      label: "Long text",
-      jsonSchema: {
-        type: "string",
-        title: "Edit me",
-        description: "",
-        default: ""
-      },
-      uiSchema: {
-        "ui:widget": "textarea",
-        editSchema: {
-          type: "object",
-          properties: {
-            title: {type: "string", title: "Label"},
-            description: {type: "string", title: "Example value"},
-            required: {type: "boolean"},
           }
         },
       },
@@ -65,7 +41,6 @@ export default {
           type: "object",
           properties: {
             title: {type: "string", title: "Label"},
-            required: {type: "boolean"},
           }
         },
       },
@@ -90,7 +65,7 @@ export default {
           type: "object",
           properties: {
             title: {type: "string", title: "Label"},
-            required: {type: "boolean"},
+            //required: {type: "boolean"},
             items: {
               type: "object",
               title: "Choices",
@@ -110,6 +85,7 @@ export default {
       },
       formData: {}
     },
+    /*
     {
       id: "radiobuttonlist",
       icon: "list",
@@ -125,7 +101,7 @@ export default {
           type: "object",
           properties: {
             title: {type: "string", title: "Label"},
-            required: {type: "boolean"},
+            //required: {type: "boolean"},
             enum: {
               type: "array",
               title: "Options",
@@ -138,6 +114,7 @@ export default {
       },
       formData: {}
     },
+    */
     {
       id: "select",
       icon: "chevron-down",
@@ -154,7 +131,7 @@ export default {
           type: "object",
           properties: {
             title: {type: "string", title: "Label"},
-            required: {type: "boolean"},
+         //   required: {type: "boolean"},
             enum: {
               type: "array",
               title: "Options",
@@ -182,7 +159,7 @@ export default {
           type: "object",
           properties: {
             title: {type: "string", title: "Label"},
-            required: {type: "boolean"}
+           // required: {type: "boolean"}
           }
         },
       },
